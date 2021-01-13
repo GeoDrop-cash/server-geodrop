@@ -27,7 +27,7 @@
   "license": "MIT",
   "apidoc": {
     "title": "koa-api-boilerplate",
-    "url": "localhost:5000"
+    "url": "localhost:5001"
   },
   "repository": "christroutner/koa-api-boilerplate",
   "dependencies": {
