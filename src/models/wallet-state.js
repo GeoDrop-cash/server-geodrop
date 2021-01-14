@@ -11,7 +11,11 @@ const mongoose = require('mongoose')
 const WalletState = new mongoose.Schema({
   network: { type: String, default: 'mainnet' },
   derivation: { type: Number, default: 245 },
-  nextAddress: { type: Number, default: 0 }
+  nextAddress: { type: Number, default: 0 },
+
+  // Stores the IDs of campaign models. The number of elements in this array
+  // should equal the value of the nextAddress property.
+  campaigns: { type: Array }
 })
 
 // export default mongoose.model('user', User)
