@@ -7,7 +7,8 @@ const Merchant = new mongoose.Schema({
   long: { type: Number, default: -122.3547189 },
   address: { type: String },
   phone: { type: String },
-  name: { type: String }
+  name: { type: String },
+  purelyPeerTier: { type: Number, default: 1 }
 })
 
 // export default mongoose.model('user', User)

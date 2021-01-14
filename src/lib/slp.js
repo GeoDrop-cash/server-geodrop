@@ -20,6 +20,7 @@ class Slp {
 
   // Create a new SLP token class.
   // Note: This method creates fixed-cap (no minting baton) Token Type 1 SLP tokens.
+  // This function return a hex string of a tx, ready to broadcast to the network.
   // The tokenConfig object is expected to have the following properties:
   // {
   //   name: 'SLP Test Token',
@@ -32,6 +33,7 @@ class Slp {
   // - token has no minting baton.
   // - token has no decimal precision. Whole tokens only.
   // - no documentHash
+  // - wif is used to pay for transaction.
   async createTokenType1 (tokenConfig) {
     try {
       // Deconstruct the property from the config object.

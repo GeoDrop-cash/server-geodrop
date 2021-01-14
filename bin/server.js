@@ -13,6 +13,8 @@ const cors = require('kcors')
 // Local libraries
 const config = require('../config') // this first.
 
+const WalletState = require('../src/models/wallet-state')
+
 const AdminLib = require('../src/lib/admin')
 const adminLib = new AdminLib()
 
@@ -70,9 +72,37 @@ async function startServer () {
   const success = await adminLib.createSystemUser()
   if (success) console.log('System admin user created.')
 
+  // Create a new wallet database model if doesn't yet exist (new install).
+  createWallet()
+
   return app
 }
 // startServer()
+
+// This function is only run once on a new install. If an instance of the wallet
+// model exists, it simply exits.
+async function createWallet () {
+  try {
+    let walletState = await WalletState.find({})
+
+    // If there is already an insance of the model, exit.
+    if (walletState.length > 0) {
+      console.log(`Wallet-State database model already exists. Next address index: ${walletState[0].nextAddress}`)
+      // console.log('walletState: ', walletState)
+      return false
+    }
+
+    // New installation. Create a wallet-state model.
+    walletState = new WalletState({})
+    walletState.save()
+
+    console.log('New installation detected. Created new wallet-state model.')
+    return true
+  } catch (err) {
+    console.error('Error in server.js/createWallet()')
+    throw err
+  }
+}
 
 // export default app
 // module.exports = app
