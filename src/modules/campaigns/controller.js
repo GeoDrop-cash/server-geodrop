@@ -31,6 +31,11 @@ class CampaignController {
 
       const campaign = new _this.Campaign(campaignObj)
 
+      // Get a new address for this campaign.
+      const { cashAddress, addrIndex } = await campaign.getAddress()
+      campaign.bchAddr = cashAddress
+      campaign.hdIndex = addrIndex
+
       await campaign.save()
 
       ctx.body = {
