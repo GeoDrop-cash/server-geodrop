@@ -33,6 +33,7 @@
   "dependencies": {
     "apidoc": "^0.23.0",
     "axios": "^0.21.1",
+    "bch-util": "^1.2.5",
     "bcryptjs": "^2.4.3",
     "glob": "^7.0.0",
     "jsonwebtoken": "^8.3.0",
