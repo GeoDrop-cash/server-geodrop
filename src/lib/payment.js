@@ -23,7 +23,7 @@ class Payment {
     try {
       // Get any campaigns with hasBeenPaid flag set to false.
       // const campaigns = await this.Campaign.find({ hasBeenPaid: false })
-      const campaigns = await Campaign.find({})
+      const campaigns = await this.Campaign.find({})
 
       // Exit if there are no unpaid campaigns.
       if (!campaigns.length) return false
@@ -49,6 +49,26 @@ class Payment {
       return fundedCampaigns
     } catch (err) {
       console.error('Error in checkForPayment()')
+      throw err
+    }
+  }
+
+  // This function is called periodically by a timer in the bin/server.js file
+  // when the the server starts.
+  async processPayments () {
+    try {
+      const fundedCampaigns = await this.checkForPayment()
+
+      if (fundedCampaigns.length === 0) {
+        console.log('No new payments detected.')
+        return false
+      }
+
+      for (let i = 0; i < fundedCampaigns.length; i++) {
+        console.log(`Campaign ${fundedCampaigns[i]} has been funded.`)
+      }
+    } catch (err) {
+      console.error('Error in processPayments()')
       throw err
     }
   }

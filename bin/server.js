@@ -21,6 +21,9 @@ const adminLib = new AdminLib()
 const errorMiddleware = require('../src/middleware')
 const wlogger = require('../src/lib/wlogger')
 
+const Payment = require('../src/lib/payment')
+const paymentLib = new Payment()
+
 async function startServer () {
   // Create a Koa instance.
   const app = new Koa()
@@ -74,6 +77,11 @@ async function startServer () {
 
   // Create a new wallet database model if doesn't yet exist (new install).
   createWallet()
+
+  // Periodically scan for new payments.
+  setInterval(function () {
+    paymentLib.processPayments()
+  }, 10000) // One minute
 
   return app
 }
