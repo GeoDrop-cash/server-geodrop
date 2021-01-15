@@ -36,6 +36,14 @@ class CampaignController {
       campaign.bchAddr = cashAddress
       campaign.hdIndex = addrIndex
 
+      // Add map data.
+      campaign.lat = campaignObj.lat
+      campaign.long = campaignObj.long
+      campaign.radius = campaignObj.radius
+
+      // TODO: Generate Drop models from the input data.
+      // TODO: Add Drop models to the campaign.drops array.
+
       await campaign.save()
 
       ctx.body = {

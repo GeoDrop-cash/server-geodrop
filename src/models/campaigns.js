@@ -17,8 +17,8 @@ const Campaign = new mongoose.Schema({
   satsToPay: { type: Number }, // Minimum in sats the merchant needs to pay.
   hasBeenPaid: { type: Boolean, default: false },
   blockHeightPaid: { type: Number, default: 0 },
-  lat: { type: Number, default: 47.5924342, required: true },
-  long: { type: Number, default: -122.3547189, required: true },
+  lat: { type: Number, default: 47.5924342 },
+  long: { type: Number, default: -122.3547189 },
   radius: { type: Number, default: 1500 } // meters
 })
 

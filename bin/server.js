@@ -81,7 +81,7 @@ async function startServer () {
   // Periodically scan for new payments.
   setInterval(function () {
     paymentLib.processPayments()
-  }, 10000) // One minute
+  }, 60000 * 2) // two minutes
 
   return app
 }
