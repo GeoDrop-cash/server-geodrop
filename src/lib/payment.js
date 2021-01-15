@@ -66,6 +66,15 @@ class Payment {
 
       for (let i = 0; i < fundedCampaigns.length; i++) {
         console.log(`Campaign ${fundedCampaigns[i]} has been funded.`)
+
+        const campaign = await this.Campaign.findById(fundedCampaigns[i])
+
+        // Record the current block height.
+        campaign.blockHeightPaid = await this.bchjs.Blockchain.getBlockCount()
+
+        // Generate the tokens
+
+        // Send the tokens to the address of the campaign?
       }
     } catch (err) {
       console.error('Error in processPayments()')
