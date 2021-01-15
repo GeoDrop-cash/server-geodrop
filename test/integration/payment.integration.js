@@ -2,6 +2,7 @@
   Integration tests for the payment.js library.
 */
 
+const assert = require('chai').assert
 const mongoose = require('mongoose')
 
 const config = require('../../config')
@@ -14,7 +15,7 @@ describe('#Payment', () => {
     // Connect to the Mongo Database.
     mongoose.Promise = global.Promise
     mongoose.set('useCreateIndex', true) // Stop deprecation warning.
-    await mongoose.connect(config.database, { useNewUrlParser: true })
+    await mongoose.connect(config.database, { useUnifiedTopology: true, useNewUrlParser: true })
   })
 
   after(async () => {
@@ -22,9 +23,12 @@ describe('#Payment', () => {
   })
 
   describe('#checkForPayment', () => {
-    it('should do something', async () => {
+    it('should return an array', async () => {
       try {
-        await uut.checkForPayment()
+        const fundedCampaigns = await uut.checkForPayment()
+        console.log(`fundedCampaigns: ${JSON.stringify(fundedCampaigns, null, 2)}`)
+
+        assert.isArray(fundedCampaigns)
       } catch (err) {
         console.log(err)
       }

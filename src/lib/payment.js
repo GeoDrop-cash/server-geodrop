@@ -33,7 +33,7 @@ class Payment {
       // Loop through each of those campaigns.
       for (let i = 0; i < campaigns.length; i++) {
         const thisCampaign = campaigns[i]
-        console.log(`thisCampaign: ${JSON.stringify(thisCampaign, null, 2)}`)
+        // console.log(`thisCampaign: ${JSON.stringify(thisCampaign, null, 2)}`)
 
         // Query the balance of the BCH address associated with the campaign.
         const balanceData = await this.bchjs.Electrumx.balance(
