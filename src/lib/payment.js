@@ -72,6 +72,11 @@ class Payment {
         // Record the current block height.
         campaign.blockHeightPaid = await this.bchjs.Blockchain.getBlockCount()
 
+        // Mark the campaign as paid.
+        campaign.hasBeenPaid = true
+
+        await campaign.save()
+
         // Generate the tokens
 
         // Send the tokens to the address of the campaign?
