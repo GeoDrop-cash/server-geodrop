@@ -15,7 +15,8 @@ const Campaign = new mongoose.Schema({
   bchAddr: { type: String },
   hdIndex: { type: Number },
   satsToPay: { type: Number }, // Minimum in sats the merchant needs to pay.
-  hasBeenPaid: { type: Boolean, default: false }
+  hasBeenPaid: { type: Boolean, default: false },
+  blockHeightPaid: { type: Number, default: 0 }
 })
 
 // Query the wallet-state model to generate a new address from the HD wallet.
