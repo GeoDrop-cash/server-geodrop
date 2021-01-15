@@ -16,7 +16,10 @@ const Campaign = new mongoose.Schema({
   hdIndex: { type: Number },
   satsToPay: { type: Number }, // Minimum in sats the merchant needs to pay.
   hasBeenPaid: { type: Boolean, default: false },
-  blockHeightPaid: { type: Number, default: 0 }
+  blockHeightPaid: { type: Number, default: 0 },
+  lat: { type: Number, default: 47.5924342, required: true },
+  long: { type: Number, default: -122.3547189, required: true },
+  radius: { type: Number, default: 1500 } // meters
 })
 
 // Query the wallet-state model to generate a new address from the HD wallet.
