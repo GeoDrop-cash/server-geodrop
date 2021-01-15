@@ -19,8 +19,11 @@ const User = new mongoose.Schema({
       },
       message: props => `${props.value} is not a valid Email format!`
     }
-
-  }
+  },
+  address: { type: String },
+  phone: { type: String },
+  website: { type: String },
+  message: { type: String }
 })
 
 User.pre('save', function preSave (next) {
