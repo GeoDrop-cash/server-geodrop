@@ -20,13 +20,13 @@ class PlayController {
    * @apiGroup Play
    *
    * @apiExample Example usage:
-   * curl -H "Content-Type: application/json" -X POST -d '{ "drop": { "message": "Test Drop", "lat": 47.5924342, "long": -122.3547189 } }' localhost:5001/drops
+   * curl -H "Content-Type: application/json" -X POST -d '{ "playerInfo": { "campaignId": "6003740f8683ce20a734887a", "lat": 47.5924342, "lng": -122.3547189 } }' localhost:5001/play/directions
    *
    */
   async getDirections (ctx) {
     try {
       const playerInfo = ctx.request.body.playerInfo
-      // console.log(`playerInfo: ${JSON.stringify(playerInfo, null, 2)}`)
+      console.log(`playerInfo: ${JSON.stringify(playerInfo, null, 2)}`)
 
       /*
        * ERROR HANDLERS
