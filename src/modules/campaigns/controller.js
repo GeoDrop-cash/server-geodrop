@@ -22,7 +22,7 @@ class CampaignController {
   async createCampaign (ctx) {
     try {
       const campaignObj = ctx.request.body.campaign
-      console.log(`campaignObj: ${JSON.stringify(campaignObj, null, 2)}`)
+      // console.log(`campaignObj: ${JSON.stringify(campaignObj, null, 2)}`)
 
       /*
        * ERROR HANDLERS
@@ -52,7 +52,7 @@ class CampaignController {
       for (let i = 0; i < campaignObj.drops.length; i++) {
       // for (let i = 0; i < 1; i++) {
         const thisDropInfo = campaignObj.drops[i]
-        console.log(`thisDropInfo: ${JSON.stringify(thisDropInfo, null, 2)}`)
+        // console.log(`thisDropInfo: ${JSON.stringify(thisDropInfo, null, 2)}`)
 
         const dropObj = {
           lat: thisDropInfo.lat,
@@ -62,7 +62,7 @@ class CampaignController {
         const drop = new _this.Drop(dropObj)
 
         await drop.save()
-        console.log(`drop: ${JSON.stringify(drop, null, 2)}`)
+        // console.log(`drop: ${JSON.stringify(drop, null, 2)}`)
 
         // Add Drop models to the campaign.drops array.
         campaign.drops.push(drop._id)

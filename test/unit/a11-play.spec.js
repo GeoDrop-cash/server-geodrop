@@ -16,11 +16,14 @@ const Drop = require('../../src/models/drops')
 let sandbox
 
 describe('Play', () => {
+  let campaignId = ''
+
   before(async () => {
     // Delete all campaign and drop models in the database.
     await deleteAllDrops()
     await deleteAllCampaigns()
 
+    // Create a campaign with three Drops.
     const body = {
       campaign: {
         merchant: 'test',
@@ -48,7 +51,10 @@ describe('Play', () => {
       data: body
     }
 
-    await axios(options)
+    const data = await axios(options)
+    // console.log(`data.data: ${JSON.stringify(data.data, null, 2)}`)
+
+    campaignId = data.data.campaign._id
   })
 
   beforeEach(() => {
@@ -60,27 +66,30 @@ describe('Play', () => {
   afterEach(() => sandbox.restore())
 
   describe('POST /play', () => {
-    it('should throw error if email property is not provided', async () => {
+    it('should get directions to the nearest drop', async () => {
       try {
-        // const options = {
-        //   method: 'POST',
-        //   url: `${LOCALHOST}/contact/email`,
-        //   data: {
-        //     obj: {
-        //       formMessage: 'message'
-        //     }
-        //   }
-        // }
-        //
-        // await axios(options)
-        //
-        // // console.log(`result: ${JSON.stringify(result, null, 2)}`)
-        //
-        // // console.log(`result stringified: ${JSON.stringify(result, null, 2)}`)
-        // assert(false, 'Unexpected result')
+        const body = {
+          playerInfo: {
+            campaignId,
+            lat: 48.5002868,
+            lng: -122.649676
+          }
+        }
+
+        const options = {
+          method: 'POST',
+          url: `${LOCALHOST}/play/directions`,
+          data: body
+        }
+
+        const result = await axios(options)
+
+        // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+        assert.property(result.data, 'distance')
+        assert.property(result.data, 'direction')
       } catch (err) {
-        assert.equal(err.response.status, 422)
-        assert.include(err.response.data, "Property 'email' must be a string!")
+        console.log('Error: ', err)
       }
     })
   })

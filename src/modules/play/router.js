@@ -11,6 +11,6 @@ module.exports.routes = [
   {
     method: 'POST',
     route: '/directions',
-    handlers: [controller.createDrop]
+    handlers: [controller.getDirections]
   }
 ]

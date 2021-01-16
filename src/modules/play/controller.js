@@ -26,6 +26,7 @@ class PlayController {
   async getDirections (ctx) {
     try {
       const playerInfo = ctx.request.body.playerInfo
+      // console.log(`playerInfo: ${JSON.stringify(playerInfo, null, 2)}`)
 
       /*
        * ERROR HANDLERS
@@ -45,12 +46,16 @@ class PlayController {
       }
 
       // Get the Campaign info from the DB.
-      const campaign = _this.Campaign.findById(playerInfo.campaignId)
+      const campaign = await _this.Campaign.findById(playerInfo.campaignId)
+      // console.log(`campaign: ${JSON.stringify(campaign, null, 2)}`)
+      // console.log('campaign: ', campaign)
 
       // Get the Drops associated with the campaign.
       const drops = []
       for (let i = 0; i < campaign.drops.length; i++) {
-        const thisDrop = _this.Drop.findById(campaign.drops[i])
+        const thisDrop = await _this.Drop.findById(campaign.drops[i])
+        // console.log(`thisDrop: ${JSON.stringify(thisDrop, null, 2)}`)
+
         drops.push(thisDrop)
       }
 
@@ -59,34 +64,38 @@ class PlayController {
       for (let i = 0; i < drops.length; i++) {
         const point = {
           latitude: drops[i].lat,
-          longitude: drops[i].long
+          longitude: drops[i].lng
         }
 
         points.push(point)
       }
+      // console.log(`points: ${JSON.stringify(points, null, 2)}`)
 
       // Find the nearest Drop.
-      const nearestDrop = this.map.findNearest(
+      const nearestDrop = _this.map.findNearest(
         playerInfo.lat,
         playerInfo.lng,
         points
       )
+      // console.log('nearestDrop: ', nearestDrop)
 
       // Get the distance to the nearest drop.
-      const distance = this.map.getDistance(
+      const distance = _this.map.getDistance(
         nearestDrop.latitude,
         nearestDrop.longitude,
         playerInfo.lat,
         playerInfo.lng
       )
+      // console.log('distance: ', distance)
 
       // Get the direction to the nearest drop.
-      const direction = this.map.getHeading(
+      const direction = _this.map.getHeading(
         nearestDrop.latitude,
         nearestDrop.longitude,
         playerInfo.lat,
         playerInfo.lng
       )
+      // console.log('direction: ', direction)
 
       // Return the direction and info.
       ctx.body = {
