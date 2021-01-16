@@ -88,8 +88,8 @@ async function startServer () {
     } catch (err) {
       console.error('Error trying to process payments!')
     }
-    // }, 60000 * 2) // two minutes
-  }, 10000)
+  }, 60000 * 2) // two minutes
+  // }, 10000)
 
   return app
 }
