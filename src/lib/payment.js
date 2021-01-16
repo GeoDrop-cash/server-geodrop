@@ -48,9 +48,9 @@ class Payment {
           balanceData.balance.confirmed + balanceData.balance.unconfirmed
 
         // If a balance is greater than satsToPay, return the campaign ID.
-        // if (balance > thisCampaign.satsToPay) fundedCampaigns.push(thisCampaign._id)
+        // if (balance >= thisCampaign.satsToPay) fundedCampaigns.push(thisCampaign._id)
         // For debugging
-        if (balance > 3000) fundedCampaigns.push(thisCampaign._id)
+        if (balance >= 3000) fundedCampaigns.push(thisCampaign._id)
       }
 
       return fundedCampaigns
