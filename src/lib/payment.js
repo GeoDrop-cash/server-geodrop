@@ -7,11 +7,16 @@ const BCHJS = require('@psf/bch-js')
 
 // Local libraries
 const Campaign = require('../models/campaigns')
+const Slp = require('./slp')
+const config = require('../../config')
 
 class Payment {
   constructor (payConfig) {
+    // Encapsulate dependencies for easier mocking.
     this.bchjs = new BCHJS()
     this.Campaign = Campaign
+    this.slp = new Slp()
+    this.config = config
 
     this.blah = 4
   }
@@ -22,8 +27,8 @@ class Payment {
   async checkForPayment () {
     try {
       // Get any campaigns with hasBeenPaid flag set to false.
-      // const campaigns = await this.Campaign.find({ hasBeenPaid: false })
-      const campaigns = await this.Campaign.find({})
+      const campaigns = await this.Campaign.find({ hasBeenPaid: false })
+      // const campaigns = await this.Campaign.find({})
 
       // Exit if there are no unpaid campaigns.
       if (!campaigns.length) return false
@@ -43,7 +48,9 @@ class Payment {
           balanceData.balance.confirmed + balanceData.balance.unconfirmed
 
         // If a balance is greater than satsToPay, return the campaign ID.
-        if (balance) fundedCampaigns.push(thisCampaign._id)
+        // if (balance > thisCampaign.satsToPay) fundedCampaigns.push(thisCampaign._id)
+        // For debugging
+        if (balance > 3000) fundedCampaigns.push(thisCampaign._id)
       }
 
       return fundedCampaigns
@@ -68,6 +75,7 @@ class Payment {
         console.log(`Campaign ${fundedCampaigns[i]} has been funded.`)
 
         const campaign = await this.Campaign.findById(fundedCampaigns[i])
+        // console.log(`campaign: ${JSON.stringify(campaign, null, 2)}`)
 
         // Record the current block height.
         campaign.blockHeightPaid = await this.bchjs.Blockchain.getBlockCount()
@@ -77,12 +85,48 @@ class Payment {
 
         await campaign.save()
 
+        // Generate a WIF private key for the address assigned to the campaign.
+        const wif = await this.getWif(campaign.hdIndex)
+
         // Generate the tokens
+        const tokenConfig = {
+          name: campaign.tokenName,
+          ticker: campaign.tokenTicker,
+          documentUrl: campaign.tokenUrl,
+          qty: campaign.tokenQty,
+          wif: wif
+        }
+        const hex = await this.slp.createTokenType1(tokenConfig)
+
+        const txid = await this.slp.broadcastTx(hex)
+        console.log(`${campaign.tokenTicker} token created. TXID: ${txid}`)
 
         // Send the tokens to the address of the campaign?
       }
     } catch (err) {
       console.error('Error in processPayments()')
+      throw err
+    }
+  }
+
+  // Get the WIF private key for a given HD index.
+  async getWif (hdIndex) {
+    try {
+      // TODO: throw an error if hdIndex is not an integer.
+
+      // get the mnemonic
+      const mnemonic = config.mnemonic
+
+      // generate the wif
+      const rootSeed = await this.bchjs.Mnemonic.toSeed(mnemonic)
+      const masterHDNode = this.bchjs.HDNode.fromSeed(rootSeed)
+      const childNode = masterHDNode.derivePath(`m/44'/245'/0'/0/${hdIndex}`)
+      const wif = this.bchjs.HDNode.toWIF(childNode)
+      // console.log(`wif: ${JSON.stringify(wif, null, 2)}`)
+
+      return wif
+    } catch (err) {
+      console.error('Error in payment.js/getWif()')
       throw err
     }
   }

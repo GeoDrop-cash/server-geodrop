@@ -32,10 +32,13 @@ async function startServer () {
   // Connect to the Mongo Database.
   mongoose.Promise = global.Promise
   mongoose.set('useCreateIndex', true) // Stop deprecation warning.
-  await mongoose.connect(config.database, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true
-  })
+  await mongoose.connect(
+    config.database,
+    {
+      useUnifiedTopology: true,
+      useNewUrlParser: true
+    }
+  )
 
   // MIDDLEWARE START
 
@@ -80,8 +83,13 @@ async function startServer () {
 
   // Periodically scan for new payments.
   setInterval(function () {
-    paymentLib.processPayments()
-  }, 60000 * 2) // two minutes
+    try {
+      paymentLib.processPayments()
+    } catch (err) {
+      console.error('Error trying to process payments!')
+    }
+    // }, 60000 * 2) // two minutes
+  }, 10000)
 
   return app
 }
@@ -95,7 +103,11 @@ async function createWallet () {
 
     // If there is already an insance of the model, exit.
     if (walletState.length > 0) {
-      console.log(`Wallet-State database model already exists. Next address index: ${walletState[0].nextAddress}`)
+      console.log(
+        `Wallet-State database model already exists. Next address index: ${
+          walletState[0].nextAddress
+        }`
+      )
       // console.log('walletState: ', walletState)
       return false
     }
