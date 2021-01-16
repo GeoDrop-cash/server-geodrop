@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "export KOA_ENV=test && npm run prep-test && nyc --reporter=text mocha --exit --timeout 15000 test/unit/",
+    "test": "export KOA_ENV=test && npm run prep-test && mocha --exit --timeout 15000 test/unit/",
     "lint": "standard --env mocha --fix",
     "docs": "./node_modules/.bin/apidoc -i src/ -o docs",
     "coverage": "export KOA_ENV=test && npm run prep-test && nyc report --reporter=text-lcov | coveralls",
