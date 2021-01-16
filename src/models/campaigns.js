@@ -23,6 +23,7 @@ const Campaign = new mongoose.Schema({
   long: { type: Number, default: -122.3547189 },
   radius: { type: Number, default: 1500 }, // meters
 
+  // token data
   tokenName: { type: String },
   tokenTicker: { type: String },
   tokenUrl: { type: String },
