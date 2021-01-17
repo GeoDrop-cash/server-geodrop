@@ -2,6 +2,7 @@ const Drop = require('../../models/drops')
 const Campaign = require('../../models/campaigns')
 const Map = require('../../lib/map')
 const Payment = require('../../lib/payment')
+const wlogger = require('../../lib/wlogger')
 
 let _this
 
@@ -28,7 +29,7 @@ class PlayController {
   async getDirections (ctx) {
     try {
       const playerInfo = ctx.request.body.playerInfo
-      console.log(`playerInfo: ${JSON.stringify(playerInfo, null, 2)}`)
+      wlogger.debug(`playerInfo: ${JSON.stringify(playerInfo, null, 2)}`)
 
       /*
        * ERROR HANDLERS
@@ -99,7 +100,7 @@ class PlayController {
 
       // Find the nearest Drop.
       const nearestDrop = _this.map.findNearest(playerLat, playerLng, points)
-      console.log('nearestDrop: ', nearestDrop)
+      wlogger.debug('nearestDrop: ', nearestDrop)
 
       // Get the distance to the nearest drop.
       const distance = _this.map.getDistance(
@@ -153,7 +154,7 @@ class PlayController {
         playerLat,
         playerLng
       )
-      console.log(`geoInfo: ${JSON.stringify(geoInfo, null, 2)}`)
+      wlogger.debug(`geoInfo: ${JSON.stringify(geoInfo, null, 2)}`)
       const { distance, nearestDrop } = geoInfo
 
       // If the player coordinates are further than 100 meters, exit.
