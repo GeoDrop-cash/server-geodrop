@@ -93,6 +93,51 @@ describe('Play', () => {
       }
     })
   })
+
+  describe('#claim', () => {
+    it('should return an error if the player is less than the minimum distance', async () => {
+      const body = {
+        playerInfo: {
+          playerAddr: 'fakeBchAddr',
+          playerLat: 48.5002868,
+          playerLng: -122.649676,
+          campaignId
+        }
+      }
+
+      const options = {
+        method: 'POST',
+        url: `${LOCALHOST}/play/claim`,
+        data: body
+      }
+
+      const result = await axios(options)
+      // console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+
+      assert.equal(result.data.success, false)
+      assert.equal(result.data.message, 'Not close enough')
+    })
+
+    it('should return a txid if use is close enough', async () => {
+      const body = {
+        playerInfo: {
+          playerAddr: 'fakeBchAddr',
+          playerLat: 48.5107477,
+          playerLng: -122.6142928,
+          campaignId
+        }
+      }
+
+      const options = {
+        method: 'POST',
+        url: `${LOCALHOST}/play/claim`,
+        data: body
+      }
+
+      const result = await axios(options)
+      console.log(`result.data: ${JSON.stringify(result.data, null, 2)}`)
+    })
+  })
 })
 
 async function deleteAllCampaigns () {

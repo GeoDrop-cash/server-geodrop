@@ -46,7 +46,11 @@ class PlayController {
       }
 
       // call _getDirections()
-      const info = await _this._getDirections(playerInfo.campaignId, playerInfo.lat, playerInfo.lng)
+      const info = await _this._getDirections(
+        playerInfo.campaignId,
+        playerInfo.lat,
+        playerInfo.lng
+      )
 
       // Return the direction and info.
       ctx.body = info
@@ -89,11 +93,7 @@ class PlayController {
       // console.log(`points: ${JSON.stringify(points, null, 2)}`)
 
       // Find the nearest Drop.
-      const nearestDrop = _this.map.findNearest(
-        playerLat,
-        playerLng,
-        points
-      )
+      const nearestDrop = _this.map.findNearest(playerLat, playerLng, points)
       console.log('nearestDrop: ', nearestDrop)
 
       // Get the distance to the nearest drop.
@@ -116,7 +116,8 @@ class PlayController {
 
       return {
         distance,
-        direction
+        direction,
+        nearestDrop
       }
     } catch (err) {
       console.error('Error in play/controller.js/_getDirections()')
@@ -136,20 +137,67 @@ class PlayController {
    */
   async claimToken (ctx) {
     try {
-      // const playerInfo = ctx.request.body.playerInfo
-      // const { playerAddr, playerLat, playerLng, campaignId } = playerInfo
+      const playerInfo = ctx.request.body.playerInfo
+      const { playerAddr, playerLat, playerLng, campaignId } = playerInfo
 
       // TODO: Put input validation code here.
 
       // Find the nearest Drop for the given campaign.
+      const geoInfo = await _this._getDirections(
+        campaignId,
+        playerLat,
+        playerLng
+      )
+      console.log(`geoInfo: ${JSON.stringify(geoInfo, null, 2)}`)
+      const { distance, nearestDrop } = geoInfo
 
       // If the player coordinates are further than 100 meters, exit.
+      const MINIMUM_DISTANCE = 100 // meters
+      if (distance > MINIMUM_DISTANCE) {
+        ctx.body = {
+          success: false,
+          message: 'Not close enough',
+          txid: ''
+        }
+
+        return
+      }
+
+      // Get the Campaign the player is currently playing.
+      const thisCampaign = await _this.Campaign.findById(campaignId)
+      console.log(`thisCampaign: ${JSON.stringify(thisCampaign, null, 2)}`)
 
       // Get the model for that Drop.
+      const dropId = await _this._findDrop(nearestDrop.latitude, nearestDrop.longitude, thisCampaign.drops)
+      console.log('dropId: ', dropId)
+
+      // Exit if the Drop could not be found.
+      if (!dropId) {
+        ctx.body = {
+          success: false,
+          message: 'Could not find Drop in database',
+          txid: ''
+        }
+
+        return
+      }
 
       // Mark the Drop as claimed.
+      const thisDrop = await _this.Drop.findById(dropId)
+      console.log(`thisDrop: ${JSON.stringify(thisDrop, null, 2)}`)
 
       // Transfer the SLP token to the player
+      console.log(`Will transfer Drop ${dropId} to player address ${playerAddr}`)
+
+      // Mark the drop as claimed.
+      thisDrop.hasBeenClaimed = true
+      await thisDrop.save()
+
+      ctx.body = {
+        success: true,
+        message: 'Token claimed',
+        txid: 'fake_txid'
+      }
     } catch (err) {
       console.error('Error in play/controller.js/claimToken()')
       // console.log(`err.message: ${err.message}`)
@@ -161,9 +209,19 @@ class PlayController {
   // This is a private function called by the claimToken() method.
   // Give the coordinates for the nearest drop, this method finds the Drop model
   // that matches those coordinates.
-  async _findDrop (lat, lng) {
+  async _findDrop (lat, lng, drops) {
     try {
+      // Loop through all drops in the Campaign.
+      for (let i = 0; i < drops.length; i++) {
+        const thisDrop = await _this.Drop.findById(drops[i])
+        // console.log(`thisDrop: ${JSON.stringify(thisDrop, null, 2)}`)
 
+        if (thisDrop.lat === lat && thisDrop.lng === lng) {
+          return thisDrop._id
+        }
+      }
+
+      return false
     } catch (err) {
       console.error('Error in play/controller.js/_findDrop()')
       throw err
