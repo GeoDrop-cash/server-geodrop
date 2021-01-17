@@ -79,6 +79,9 @@ class PlayController {
         const thisDrop = await _this.Drop.findById(campaign.drops[i])
         // console.log(`thisDrop: ${JSON.stringify(thisDrop, null, 2)}`)
 
+        // Ignore the drop if it's already been claimed.
+        if (thisDrop.hasBeenClaimed) continue
+
         drops.push(thisDrop)
       }
 
