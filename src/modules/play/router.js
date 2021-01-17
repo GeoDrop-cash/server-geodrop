@@ -12,5 +12,10 @@ module.exports.routes = [
     method: 'POST',
     route: '/directions',
     handlers: [controller.getDirections]
+  },
+  {
+    method: 'POST',
+    route: '/claim',
+    handlers: [controller.claimToken]
   }
 ]
