@@ -27,7 +27,8 @@ const Campaign = new mongoose.Schema({
   tokenName: { type: String },
   tokenTicker: { type: String },
   tokenUrl: { type: String },
-  tokenQty: { type: Number }
+  tokenQty: { type: Number },
+  tokenId: { type: String }
 })
 
 // Query the wallet-state model to generate a new address from the HD wallet.

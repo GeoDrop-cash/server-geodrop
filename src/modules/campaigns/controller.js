@@ -70,6 +70,9 @@ class CampaignController {
 
       await campaign.save()
 
+      // TODO: Loop through the Drops that were just created and add the
+      // ID of the campaign model to them.
+
       ctx.body = {
         campaign
       }

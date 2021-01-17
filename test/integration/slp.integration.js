@@ -28,4 +28,17 @@ describe('#slp.js', () => {
       assert.isString(hex)
     })
   })
+
+  describe('#sendToken', () => {
+    it('should send a token', async () => {
+      const sendConfig = {
+        playerAddr: 'bitcoincash:qqng506kt4rjvnm5t2g9at0zak0r6lqzgvfjd372f0',
+        tokenId: '8f338ca4b477691a1915231d85d0d22cf024d5c8198befb1a7b9a132530b98c3',
+        wif: WIF
+      }
+
+      const hex = await uut.sendToken(sendConfig)
+      console.log('hex: ', hex)
+    })
+  })
 })
