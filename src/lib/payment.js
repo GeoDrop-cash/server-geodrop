@@ -109,7 +109,9 @@ class Payment {
         const txid = await this.slp.broadcastTx(hex)
         console.log(`${campaign.tokenTicker} token created. TXID: ${txid}`)
 
-        // Send the tokens to the address of the campaign?
+        // Save the Token ID for the newly created token, to the campaign model.
+        campaign.tokenId = txid
+        await campaign.save()
       }
     } catch (err) {
       console.error('Error in processPayments()')
@@ -135,6 +137,34 @@ class Payment {
       return wif
     } catch (err) {
       console.error('Error in payment.js/getWif()')
+      throw err
+    }
+  }
+
+  // This method is called when a player wants to claim a Drop. It triggers the
+  // transfer of an SLP token from the Campaign address to the players address.
+  async claimToken (claimConfig) {
+    try {
+      const { playerAddr, tokenId, hdIndex } = claimConfig
+
+      // Generate a WIF private key for the address assigned to the campaign.
+      const wif = await this.getWif(hdIndex)
+
+      // Create an SLP token transaction.
+      const sendConfig = {
+        playerAddr,
+        tokenId,
+        wif
+      }
+      const hex = await this.slp.sendToken(sendConfig)
+
+      // Broadcast the transaction on the network.
+      const txid = await this.slp.broadcastTx(hex)
+      console.log(`txid: ${txid}`)
+
+      return txid
+    } catch (err) {
+      console.error('Error in payment.js/claimToken()')
       throw err
     }
   }

@@ -1,6 +1,7 @@
 const Drop = require('../../models/drops')
 const Campaign = require('../../models/campaigns')
 const Map = require('../../lib/map')
+const Payment = require('../../lib/payment')
 
 let _this
 
@@ -11,6 +12,7 @@ class PlayController {
     this.Drop = Drop
     this.Campaign = Campaign
     this.map = new Map()
+    this.payment = new Payment()
   }
 
   /**
@@ -168,7 +170,11 @@ class PlayController {
       console.log(`thisCampaign: ${JSON.stringify(thisCampaign, null, 2)}`)
 
       // Get the model for that Drop.
-      const dropId = await _this._findDrop(nearestDrop.latitude, nearestDrop.longitude, thisCampaign.drops)
+      const dropId = await _this._findDrop(
+        nearestDrop.latitude,
+        nearestDrop.longitude,
+        thisCampaign.drops
+      )
       console.log('dropId: ', dropId)
 
       // Exit if the Drop could not be found.
@@ -187,7 +193,15 @@ class PlayController {
       console.log(`thisDrop: ${JSON.stringify(thisDrop, null, 2)}`)
 
       // Transfer the SLP token to the player
-      console.log(`Will transfer Drop ${dropId} to player address ${playerAddr}`)
+      console.log(
+        `Will transfer Drop ${dropId} to player address ${playerAddr}`
+      )
+      const claimConfig = {
+        playerAddr: playerAddr,
+        tokenId: thisCampaign.tokenId,
+        hdIndex: thisCampaign.hdIndex
+      }
+      const txid = await _this.payment.claimToken(claimConfig)
 
       // Mark the drop as claimed.
       thisDrop.hasBeenClaimed = true
@@ -196,10 +210,10 @@ class PlayController {
       ctx.body = {
         success: true,
         message: 'Token claimed',
-        txid: 'fake_txid'
+        txid
       }
     } catch (err) {
-      console.error('Error in play/controller.js/claimToken()')
+      console.error('Error in play/controller.js/claimToken(): ', err)
       // console.log(`err.message: ${err.message}`)
       // console.log('err: ', err)
       ctx.throw(422, err.message)
