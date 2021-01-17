@@ -96,6 +96,14 @@ class Payment {
           qty: campaign.tokenQty,
           wif: wif
         }
+        console.log(
+          `Creating tokens with this config info: ${JSON.stringify(
+            tokenConfig,
+            null,
+            2
+          )}`
+        )
+
         const hex = await this.slp.createTokenType1(tokenConfig)
 
         const txid = await this.slp.broadcastTx(hex)
