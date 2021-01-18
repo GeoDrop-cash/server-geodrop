@@ -1,7 +1,7 @@
 {
-  "name": "purelypeer-api",
+  "name": "server-geodrop",
   "version": "1.0.0",
-  "description": "A REST API for the PurelyPeer game.",
+  "description": "A REST API for the GeoDrop.cash game.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -26,10 +26,10 @@
   "author": "Chris Troutner <chris.troutner@gmail.com>",
   "license": "MIT",
   "apidoc": {
-    "title": "PurelyPeer API",
+    "title": "GeoDrop API",
     "url": "localhost:5001"
   },
-  "repository": "PurelyPeer/purelypeer-api",
+  "repository": "GeoDrop-cash/server-geodrop",
   "dependencies": {
     "@psf/bch-js": "^4.5.4",
     "apidoc": "^0.23.0",
