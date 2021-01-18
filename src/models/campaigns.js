@@ -20,6 +20,10 @@ const Campaign = new mongoose.Schema({
   expiration: { type: String },
   isActive: { type: Boolean, default: false },
 
+  // This property marked as true when the campaign has been closed down and all
+  // funds sent to eatBCH.
+  hasBeenSwept: { type: Boolean, default: false },
+
   // Map data
   lat: { type: Number, default: 47.5924342 },
   long: { type: Number, default: -122.3547189 },
@@ -63,6 +67,24 @@ Campaign.methods.getAddress = async function getAddress () {
     return { cashAddress, addrIndex }
   } catch (err) {
     console.error('Error in models/campaigns.js/getAddress()')
+    throw err
+  }
+}
+
+// Returns a JavaScript Date object representing two weeks from the current time.
+Campaign.methods.generateExpiration = function generateExpiration () {
+  try {
+    const now = new Date()
+
+    const TWO_WEEKS = 60000 * 60 * 24 * 14
+
+    const twoWeeksFromNow = now.getTime() + TWO_WEEKS
+
+    const retDate = new Date(twoWeeksFromNow)
+
+    return retDate
+  } catch (err) {
+    console.error('Error in models/campaigns.js/generateExpiration()')
     throw err
   }
 }

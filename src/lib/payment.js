@@ -27,7 +27,7 @@ class Payment {
   async checkForPayment () {
     try {
       // Get any campaigns with hasBeenPaid flag set to false.
-      const campaigns = await this.Campaign.find({ hasBeenPaid: false })
+      const campaigns = await this.Campaign.find({ hasBeenPaid: false, hasBeenSwept: false })
       // const campaigns = await this.Campaign.find({})
 
       // Exit if there are no unpaid campaigns.

@@ -24,6 +24,9 @@ const wlogger = require('../src/lib/wlogger')
 const Payment = require('../src/lib/payment')
 const paymentLib = new Payment()
 
+const EatBch = require('../src/lib/eat-bch')
+const eatBch = new EatBch()
+
 async function startServer () {
   // Create a Koa instance.
   const app = new Koa()
@@ -90,6 +93,16 @@ async function startServer () {
     }
   }, 60000 * 2) // two minutes
   // }, 10000)
+
+  // Peridocally check the campaigns and close down old ones.
+  setInterval(await function () {
+    try {
+      console.log('Scanning for expired campaigns.')
+      eatBch.scanForFinishedCampaigns()
+    } catch (err) {
+      console.error('Error trying to clean up dead campaigns: ', err)
+    }
+  }, 60000)
 
   return app
 }
