@@ -102,7 +102,7 @@ async function startServer () {
     } catch (err) {
       console.error('Error trying to clean up dead campaigns: ', err)
     }
-  }, 60000)
+  }, 60000 * 60) // Once per hour
 
   return app
 }
