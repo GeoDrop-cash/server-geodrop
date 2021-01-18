@@ -147,7 +147,7 @@ class Slp {
     try {
       // Satoshis sent as an extra output in the transaction, so that the gamer
       // can move thier token rewards.
-      const BCH_PRIZE = 2000
+      const BCH_PRIZE = 3000
 
       const { playerAddr, tokenId, wif } = sendConfig
 
