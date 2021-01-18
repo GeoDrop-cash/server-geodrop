@@ -1,7 +1,10 @@
 const Campaign = require('../../models/campaigns')
 const Drop = require('../../models/drops')
 
+const SATS_PER_DROP = 10000
+
 let _this
+
 class CampaignController {
   constructor () {
     _this = this
@@ -48,6 +51,11 @@ class CampaignController {
       campaign.long = campaignObj.long
       campaign.radius = campaignObj.radius
 
+      // Add the expiration date.
+      const twoWeeksFromNow = campaign.generateExpiration()
+      // console.log('twoWeeksFromNow: ', twoWeeksFromNow)
+      campaign.expiration = twoWeeksFromNow.toISOString()
+
       // Generate Drop models from the input data.
       for (let i = 0; i < campaignObj.drops.length; i++) {
       // for (let i = 0; i < 1; i++) {
@@ -67,6 +75,8 @@ class CampaignController {
         // Add Drop models to the campaign.drops array.
         campaign.drops.push(drop._id)
       }
+
+      campaign.satsToPay = SATS_PER_DROP * campaign.drops.length
 
       await campaign.save()
 
