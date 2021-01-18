@@ -22,7 +22,7 @@ class CampaignController {
   async createCampaign (ctx) {
     try {
       const campaignObj = ctx.request.body.campaign
-      // console.log(`campaignObj: ${JSON.stringify(campaignObj, null, 2)}`)
+      console.log(`campaignObj: ${JSON.stringify(campaignObj, null, 2)}`)
 
       /*
        * ERROR HANDLERS

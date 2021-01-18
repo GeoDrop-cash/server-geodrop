@@ -14,7 +14,7 @@ const Campaign = new mongoose.Schema({
   // starts the campaign.
   bchAddr: { type: String },
   hdIndex: { type: Number },
-  satsToPay: { type: Number }, // Minimum in sats the merchant needs to pay.
+  satsToPay: { type: Number, required: true }, // Minimum in sats the merchant needs to pay.
   hasBeenPaid: { type: Boolean, default: false },
   blockHeightPaid: { type: Number, default: 0 },
 
