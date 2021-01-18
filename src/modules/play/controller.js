@@ -58,7 +58,7 @@ class PlayController {
       // Return the direction and info.
       ctx.body = info
     } catch (err) {
-      console.error('Error in play/controller.js/getDirections(): ', err)
+      console.error('Error in play/controller.js/getDirections(): ', err.message)
       // console.log(`err.message: ${err.message}`)
       // console.log('err: ', err)
       ctx.throw(422, err.message)
