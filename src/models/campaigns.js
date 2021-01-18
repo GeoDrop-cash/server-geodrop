@@ -17,6 +17,8 @@ const Campaign = new mongoose.Schema({
   satsToPay: { type: Number, required: true }, // Minimum in sats the merchant needs to pay.
   hasBeenPaid: { type: Boolean, default: false },
   blockHeightPaid: { type: Number, default: 0 },
+  expiration: { type: String },
+  isActive: { type: Boolean, default: false },
 
   // Map data
   lat: { type: Number, default: 47.5924342 },

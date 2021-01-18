@@ -96,10 +96,15 @@ class PlayController {
 
         points.push(point)
       }
-      console.log(`points: ${JSON.stringify(points, null, 2)}`)
+      // console.log(`points: ${JSON.stringify(points, null, 2)}`)
 
       // Throw an error if all the Drops have been claimed.
       if (points.length === 0) {
+        // Mark campaign as inactive.
+        campaign.isActive = false
+        await campaign.save()
+        console.log('No drops left to claim. Campaign marked as inactive.')
+
         throw new Error('No drops left to claim.')
       }
 

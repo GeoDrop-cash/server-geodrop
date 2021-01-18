@@ -82,6 +82,7 @@ class Payment {
 
         // Mark the campaign as paid.
         campaign.hasBeenPaid = true
+        campaign.isActive = true
 
         await campaign.save()
 
