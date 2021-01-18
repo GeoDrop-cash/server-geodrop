@@ -145,6 +145,10 @@ class Slp {
   // Transfers a token from the server's wallet to the player.
   async sendToken (sendConfig) {
     try {
+      // Satoshis sent as an extra output in the transaction, so that the gamer
+      // can move thier token rewards.
+      const BCH_PRIZE = 2000
+
       const { playerAddr, tokenId, wif } = sendConfig
 
       const keyPair = this.bchjs.ECPair.fromWIF(wif)
@@ -223,7 +227,7 @@ class Slp {
       // amount to send back to the sending address.
       // Subtract two dust transactions for minting baton and tokens.
       const DUST = 546
-      const remainder = originalAmount - DUST * 2 - txFee
+      const remainder = originalAmount - DUST * 2 - txFee - BCH_PRIZE
       if (remainder < 546) {
         throw new Error('Selected UTXO does not have enough satoshis')
       }
@@ -244,6 +248,12 @@ class Slp {
           546
         )
       }
+
+      // Send BCH prize to gamer, so they can move their tokens.
+      transactionBuilder.addOutput(
+        bchjs.SLP.Address.toLegacyAddress(playerAddr),
+        BCH_PRIZE
+      )
 
       // Last output: send the BCH change back to the wallet.
       transactionBuilder.addOutput(
