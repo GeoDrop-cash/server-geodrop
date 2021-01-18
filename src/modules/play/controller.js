@@ -58,7 +58,7 @@ class PlayController {
       // Return the direction and info.
       ctx.body = info
     } catch (err) {
-      console.error('Error in play/controller.js/getDirections()')
+      console.error('Error in play/controller.js/getDirections(): ', err)
       // console.log(`err.message: ${err.message}`)
       // console.log('err: ', err)
       ctx.throw(422, err.message)
@@ -96,7 +96,12 @@ class PlayController {
 
         points.push(point)
       }
-      // console.log(`points: ${JSON.stringify(points, null, 2)}`)
+      console.log(`points: ${JSON.stringify(points, null, 2)}`)
+
+      // Throw an error if all the Drops have been claimed.
+      if (points.length === 0) {
+        throw new Error('No drops left to claim.')
+      }
 
       // Find the nearest Drop.
       const nearestDrop = _this.map.findNearest(playerLat, playerLng, points)
@@ -241,7 +246,7 @@ class PlayController {
 
       return false
     } catch (err) {
-      console.error('Error in play/controller.js/_findDrop()')
+      console.error('Error in play/controller.js/_findDrop(): ', err)
       throw err
     }
   }
