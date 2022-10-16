@@ -31,7 +31,7 @@
   },
   "repository": "GeoDrop-cash/server-geodrop",
   "dependencies": {
-    "@psf/bch-js": "^4.5.4",
+    "@psf/bch-js": "6.5.2",
     "apidoc": "^0.23.0",
     "axios": "^0.21.1",
     "bch-util": "^1.2.5",
